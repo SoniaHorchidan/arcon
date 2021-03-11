@@ -5,8 +5,10 @@ use super::{Window, WindowContext};
 use crate::{
     data::{ArconElement, ArconType},
     index::{ArconState, EagerHashTable, IndexOps, StateConstructor},
-    stream::operator::{Operator, OperatorContext},
-    stream::time::Time,
+    stream::{
+        operator::{Operator, OperatorContext},
+        time::Time,
+    },
 };
 use arcon_error::*;
 use arcon_macros::ArconState;
@@ -109,7 +111,14 @@ where
         late_arrival_time: Time,
         keyed: bool,
     ) -> Self {
-        Self::setup(window, backend, length.0, slide.0, late_arrival_time.0, keyed)
+        Self::setup(
+            window,
+            backend,
+            length.0,
+            slide.0,
+            late_arrival_time.0,
+            keyed,
+        )
     }
 
     // Setup method for both sliding and tumbling windows
@@ -354,8 +363,14 @@ mod tests {
 
         let window = AppenderWindow::new(backend.clone(), &appender_fn);
 
-        let window_assigner =
-            WindowAssigner::sliding(window, backend.clone(), Time::seconds(length), Time::seconds(slide), Time::seconds(late), true);
+        let window_assigner = WindowAssigner::sliding(
+            window,
+            backend.clone(),
+            Time::seconds(length),
+            Time::seconds(slide),
+            Time::seconds(late),
+            true,
+        );
 
         let node = Node::new(
             descriptor,
